@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\TwoFactorController;
 
 
 
@@ -26,3 +27,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/verify-2fa', [TwoFactorController::class, 'showVerifyForm'])->name('verify-2fa');
+Route::post('/verify-2fa', [TwoFactorController::class, 'verify']);
+Route::post('/resend-2fa', [TwoFactorController::class, 'resend'])->name('resend-2fa');

@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TwoFactorTokenMail;
+
 
 class LoginController extends Controller
 {
@@ -27,6 +31,21 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
+    protected function authenticated(Request $request, $user)
+    {
+        // Generar el token
+        $token = rand(100000, 999999); // Token de 6 dígitos
+        $user->token = $token;
+        $user->token_expires_at = now()->addMinutes(10); // Token válido por 10 minutos
+        $user->save();
+
+        // Enviar el token por correo
+        Mail::to($user->email)->send(new TwoFactorTokenMail($token));
+
+        // Redirigir al formulario de verificación 2FA
+        return redirect()->route('verify-2fa');
+    }
+
     /**
      * Create a new controller instance.
      *
@@ -36,5 +55,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    public function loggedOut(Request $request)
+    {
+        return redirect('/login');
     }
 }

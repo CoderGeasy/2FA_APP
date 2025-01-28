@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -23,12 +24,24 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    public function register(Request $request)
+    {
+        // Validar los datos del formulario
+        $this->validator($request->all())->validate();
+
+        // Crear el usuario
+        $user = $this->create($request->all());
+
+        // Redirigir al login sin iniciar sesión
+        return redirect($this->redirectPath())->with('status', '¡Registro exitoso! Por favor inicia sesión.');
+    }
+
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
