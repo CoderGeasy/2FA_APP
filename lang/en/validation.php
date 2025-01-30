@@ -31,6 +31,7 @@ return [
         'array' => 'The :attribute must have between :min and :max items.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
+    'captcha' => 'La verificación de reCAPTCHA es obligatoria.',
     'confirmed' => 'Los :attribute no coinciden.',
     'current_password' => 'The password is incorrect.',
     'date' => 'The :attribute is not a valid date.',

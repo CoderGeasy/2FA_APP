@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TwoFactorTokenMail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
-
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class TwoFactorController extends Controller
 {
@@ -30,18 +30,20 @@ class TwoFactorController extends Controller
         $request->validate([
             'token' => 'required|numeric|digits:6',
         ]);
-
+        
         $user = Auth::user();
 
+        if (!$user instanceof \App\Models\User) {
+            return back()->withErrors(['token' => 'Error en la autenticación. Intenta de nuevo.']);
+        }
+
         if (
-            $user->token === $request->token &&
-            $user->token_expires_at->isFuture()
+            Hash::check($request->token, $user->token) && now()->lt($user->token_expires_at)
         ) {
             // Limpiar el token después de la verificación
-            $user->update([
-                'token' => null,
-                'token_expires_at' => null,
-            ]);
+            $user->token = null; // Opcional: limpiar el token después de usarlo
+            $user->token_expires_at = null;
+            $user->save();
             return redirect()->intended('/home'); // Redirige al área protegida
         }
 
@@ -52,13 +54,17 @@ class TwoFactorController extends Controller
     {
         $user = Auth::user();
 
+        if (!$user instanceof \App\Models\User) {
+            return back()->withErrors(['token' => 'Error en la autenticación. Intenta de nuevo.']);
+        }
+
         if ($user->token && $user->token_expires_at->isFuture()) {
             return back()->with('status', 'Ya tienes un token activo. Revisa tu correo.');
         }
 
         // Generar nuevo token
         $token = rand(100000, 999999);
-        $user->token = $token;
+        $user->token = Hash::make($token);
         $user->token_expires_at = now()->addMinutes(10);
         $user->save();
 

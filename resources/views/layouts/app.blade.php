@@ -51,6 +51,10 @@
                                 </li>
                             @endif
                         @else
+                            <!-- Verificar si el usuario ha pasado 2FA -->
+                            @if(Auth::user()->token_expires_at && now()->lt(Auth::user()->token_expires_at))
+                                <!-- Si el usuario no ha verificado 2FA, mostrar un mensaje o redirigir -->
+                            @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -68,6 +72,7 @@
                                     </form>
                                 </div>
                             </li>
+                            @endif
                         @endguest
                     </ul>
                 </div>
