@@ -56,6 +56,7 @@
 
 <div class="login-container">
     <div class="login-card">
+        <p class="text-center text-white">Estás en: <strong>{{ $serverPort }}</strong></p>
         <h2>🔒 Iniciar Sesión</h2>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 

@@ -194,4 +194,6 @@ return [
         // ...
     ])->toArray(),
 
+    'port' => $_SERVER['SERVER_PORT'] ?? null,
+
 ];

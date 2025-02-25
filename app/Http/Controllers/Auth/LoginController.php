@@ -17,6 +17,14 @@ class LoginController extends Controller
 
     protected $redirectTo = '/home';
 
+    public function showLoginForm(Request $request)
+    {
+        $serverPort = $request->server('SERVER_PORT') == 8001 ? 'Servidor 1' : 'Servidor 2';
+
+        return view('auth.login', compact('serverPort'));
+    }
+
+
     public function login(Request $request)
     {
         // Validar los datos del formulario, incluyendo el reCAPTCHA
