@@ -101,7 +101,7 @@
             </div>
 
             <div class="recaptcha-container">
-                <div class="g-recaptcha" data-sitekey="6LcyRcYqAAAAAHlCudDmTHUDEh0SKlBjFXC-hEDf"></div>
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key')}}"></div>
             </div>
 
             <button type="submit" class="btn btn-custom w-100">Registrarse</button>

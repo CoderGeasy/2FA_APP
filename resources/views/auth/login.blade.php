@@ -86,7 +86,7 @@
             </div>
 
             <div class="recaptcha-container">
-                <div class="g-recaptcha" data-sitekey="{{ env('NOCAPTCHA_SITEKEY')}}"></div>
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
 
             </div>
 
